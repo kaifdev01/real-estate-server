@@ -14,7 +14,7 @@ app.use(cors());
 
 
 mongoose
-    .connect(process.env.VITE_APP_MONGO_URI)
+    .connect("mongodb+srv://admin:admin@cluster0.qergu.mongodb.net/")
     .then(() => console.log('MongoDB connected'))
     .catch((err) => console.error('MongoDB connection error:', err));
 
@@ -27,7 +27,7 @@ app.use('/api/properties', PropertyRoutes);
 app.use('/api/auth', AuthRoutes);
 
 
-const PORT = process.env.VITE_APP_PORT;
+const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
