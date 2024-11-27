@@ -19,15 +19,32 @@ const transporter = nodemailer.createTransport({
 
 
 router.post('/register', async (req, res) => {
+    const { username, email, password } = req.body;
+
     try {
-        const { username, email, password, role = 'user' } = req.body; // Default role to 'user'
+        // Check if the user already exists
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already registered with this email' });
+        }
+
+        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword, role }); // Set role
+
+        // Create a new user
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword,
+        });
+
         await newUser.save();
-        res.status(201).json({ message: 'User registered successfully', role });
+        res.status(201).json({ message: 'User registered successfully!' });
+
     } catch (error) {
-        res.status(500).json({ error: 'Failed to register' });
-        console.log(error);
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
     }
 });
 
