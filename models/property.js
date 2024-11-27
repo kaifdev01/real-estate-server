@@ -5,8 +5,15 @@ const propertySchema = new mongoose.Schema({
     phase: { type: String, required: true },
     plotNumber: { type: String, required: true },
     price: { type: Number, required: true },
-    description: { type: String, required: true },
-    images: { type: [String], default: [] },
+    propertyType: {
+        type: String,
+        enum: ['Commercial', 'Residential'], // Allows only "Commercial" or "Residential"
+        required: true,
+        default: 'Residential'
+    },
+    description: { type: String, required: true, },
+    images: { type: [String], default: [], required: true },
+    number: { type: String, required: true },
     createdAt: { type: Date, default: Date.now }
 });
 

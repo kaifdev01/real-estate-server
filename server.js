@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const PropertyRoutes = require("./routes/PropertyRoutes")
 const AuthRoutes = require('./routes/AuthRoutes');
+const CityRoutes = require('./routes/CityRoutes');
 dotenv.config();
 
 const app = express();
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/properties', PropertyRoutes);
 app.use('/api/auth', AuthRoutes);
+app.use(CityRoutes);
 
 
 const PORT = process.env.VITE_APP_PORT;

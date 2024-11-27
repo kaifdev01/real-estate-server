@@ -20,14 +20,14 @@ const transporter = nodemailer.createTransport({
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, role = 'user' } = req.body; // Default role to 'user'
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({ username, email, password: hashedPassword, role }); // Set role
         await newUser.save();
-        res.status(201).json({ message: 'Admin registered successfully' });
+        res.status(201).json({ message: 'User registered successfully', role });
     } catch (error) {
         res.status(500).json({ error: 'Failed to register' });
-        console.log(error)
+        console.log(error);
     }
 });
 
@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         if (user && (await bcrypt.compare(password, user.password))) {
-            const token = jwt.sign({ id: user._id }, "789kaif", { expiresIn: '1h' });
+            const token = jwt.sign({ id: user._id, role: user.role }, "789kaif", { expiresIn: '12h' });
             res.json({ token });
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
